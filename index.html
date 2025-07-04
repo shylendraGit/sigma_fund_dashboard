@@ -449,7 +449,7 @@
                 if (data.total_value) {
                     document.getElementById('portfolio-value').textContent = formatCurrency(data.total_value);
                     document.getElementById('available-cash').textContent = formatCurrency(data.cash);
-                    document.getElementById('net-pnl').textContent = formatCurrency(data.pnl);
+                    document.getElementById('net-pnl').textContent = formatCurrency(data.net_pnl);
                     
                     // Update percentage displays
                     if (data.pnl_percentage !== undefined) {
@@ -495,8 +495,8 @@
                 const data = await response.json();
                 
                 if (data.profit_summary) {
-                    document.getElementById('paper-profits').textContent = formatCurrency(data.profit_summary.pending_profits || 0);
-                    document.getElementById('cash-secured').textContent = formatCurrency(data.profit_summary.total_realized || 0);
+                    document.getElementById('paper-profits').textContent = formatCurrency(data.profit_summary.total_paper_profits || 0);
+                    document.getElementById('cash-secured').textContent = formatCurrency(data.profit_summary.total_realized_profits || 0);
                 }
                 
             } catch (error) {
