@@ -454,6 +454,22 @@
                     document.getElementById('net-pnl').textContent = formatCurrency(data.pnl);
                 }
                 
+                // Update position count and exposure
+                if (data.positions) {
+                    const positionCount = Object.keys(data.positions).length;
+                    document.getElementById('position-count').textContent = positionCount;
+                    
+                    // Calculate total exposure (for detailed positions, use position_details)
+                    let totalExposure = 0;
+                    if (data.position_details) {
+                        totalExposure = Object.values(data.position_details).reduce((sum, pos) => sum + pos.value, 0);
+                    } else {
+                        // Fallback calculation
+                        totalExposure = data.total_value - data.cash;
+                    }
+                    document.getElementById('positions-value').textContent = formatCurrency(totalExposure);
+                }
+                
             } catch (error) {
                 console.error('Portfolio update failed:', error);
             }
