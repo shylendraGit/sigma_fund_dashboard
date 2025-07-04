@@ -5,6 +5,7 @@ import {
 } from "recharts";
 
 export default function SigmaDashboard() {
+  // Updated: Live AGI status integration
   const [status, setStatus] = useState(null);
   const [history, setHistory] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
