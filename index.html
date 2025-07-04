@@ -452,6 +452,23 @@
                     document.getElementById('portfolio-value').textContent = formatCurrency(data.total_value);
                     document.getElementById('available-cash').textContent = formatCurrency(data.cash);
                     document.getElementById('net-pnl').textContent = formatCurrency(data.pnl);
+                    
+                    // Update percentage displays
+                    if (data.pnl_percentage !== undefined) {
+                        // Find and update P&L percentage displays
+                        const pnlPercentElements = document.querySelectorAll('.metric-change');
+                        pnlPercentElements.forEach(el => {
+                            if (el.textContent.includes('since start')) {
+                                el.innerHTML = `${data.pnl_percentage >= 0 ? '+' : ''}${data.pnl_percentage.toFixed(2)}% since start`;
+                            }
+                            if (el.textContent.includes('total return')) {
+                                el.innerHTML = `${data.total_return_percentage.toFixed(2)}% total return`;
+                            }
+                            if (el.textContent.includes('cash ratio')) {
+                                el.innerHTML = `${data.cash_ratio_percentage.toFixed(1)}% cash ratio`;
+                            }
+                        });
+                    }
                 }
                 
                 // Update position count and exposure
@@ -459,13 +476,11 @@
                     const positionCount = Object.keys(data.positions).length;
                     document.getElementById('position-count').textContent = positionCount;
                     
-                    // Calculate total exposure (for detailed positions, use position_details)
-                    let totalExposure = 0;
-                    if (data.position_details) {
-                        totalExposure = Object.values(data.position_details).reduce((sum, pos) => sum + pos.value, 0);
-                    } else {
+                    // Use total exposure from API if available
+                    let totalExposure = data.total_exposure || 0;
+                    if (totalExposure === 0 && data.position_details) {
                         // Fallback calculation
-                        totalExposure = data.total_value - data.cash;
+                        totalExposure = Object.values(data.position_details).reduce((sum, pos) => sum + pos.value, 0);
                     }
                     document.getElementById('positions-value').textContent = formatCurrency(totalExposure);
                 }
