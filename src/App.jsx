@@ -89,9 +89,33 @@ export default function SigmaDashboard() {
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold mt-6">Latest Signals</h2>
+        <h2 className="text-xl font-semibold mt-6">Live Signals</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <Card title="AGI Mind Status">
+            <span className={`font-bold ${status.agi_mind_connected ? 'text-green-600' : 'text-red-600'}`}>
+              {status.agi_mind_connected ? '🟢 Connected' : '🔴 Disconnected'}
+            </span>
+          </Card>
+          <Card title="Active Signals">
+            <span className="text-blue-600 font-bold">{status.active_signals_count || 0}</span>
+          </Card>
+          <Card title="System Health">
+            <span className={`font-bold ${
+              status.system_health === 'operational' ? 'text-green-600' : 
+              status.system_health === 'initializing' ? 'text-yellow-600' : 'text-red-600'
+            }`}>
+              {status.system_health === 'operational' ? '✅ Operational' :
+               status.system_health === 'initializing' ? '🟡 Initializing' : '⚠️ Maintenance'}
+            </span>
+          </Card>
+        </div>
+        <h3 className="text-lg font-medium mb-2">Recent Signals</h3>
         <ul className="mt-2 list-disc list-inside">
-          {status.latest_signals?.length ? status.latest_signals.map((sig, idx) => <li key={idx}>{sig}</li>) : <li>No signals</li>}
+          {status.latest_signals?.length ? status.latest_signals.map((sig, idx) => (
+            <li key={idx} className="text-sm">
+              {typeof sig === 'string' ? sig : `${sig.symbol || 'Unknown'}: ${sig.action || 'Signal'} - ${sig.confidence || 'N/A'}% confidence`}
+            </li>
+          )) : <li className="text-gray-500">No recent signals</li>}
         </ul>
       </section>
 
